@@ -202,7 +202,7 @@ export default function App() {
     { 
       name: "Tinh bột sắn", 
       percent: "37%", 
-      img: "https://res.cloudinary.com/dg5ts9slf/image/upload/v1765195344/Cu-san-3_nm7q5a.jpg" 
+      img: "https://res.cloudinary.com/dg5ts9slf/image/upload/v1765195344/khoai-mi-chua-bao-nhieu-calo-1_d7836adfcebf464ca76a0f20114ff5d8_grande_j2yozl.jpg" 
     },
     { 
       name: "Bột đậu xanh", 
@@ -212,12 +212,12 @@ export default function App() {
     { 
       name: "Bột mì", 
       percent: "6%", 
-      img: "https://res.cloudinary.com/dg5ts9slf/image/upload/v1765195344/khoai-mi-chua-bao-nhieu-calo-1_d7836adfcebf464ca76a0f20114ff5d8_grande_j2yozl.jpg" 
+      img: "https://res.cloudinary.com/dg5ts9slf/image/upload/v1765200522/bot-mi-la-gi-6-loai-bot-mi-lam-banh-thong-dung-hien-nay-202202151057525470_fprrnk.jpg" 
     },
     { 
       name: "Bột nấm", 
       percent: "6%", 
-      img: "https://res.cloudinary.com/dg5ts9slf/image/upload/v1765195345/nam-khieu-vu-la-gi-5-loi-ich-cua-nam-khieu-vu-mang-den-cho-suc-khoe-202311021435364095_ckunui.jpg" 
+      img: "https://res.cloudinary.com/dg5ts9slf/image/upload/v1765200640/nam-hong-ngoc_atrdhn.jpg" 
     },
     { 
       name: "Gia vị tự nhiên", 
