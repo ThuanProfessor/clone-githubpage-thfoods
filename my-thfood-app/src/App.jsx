@@ -118,6 +118,7 @@ const FallingLeaves = () => {
 };
 
 // --- Production Process Modal ---
+// --- Production Process Modal (Updated with Video) ---
 const ProductionModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
@@ -131,37 +132,60 @@ const ProductionModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="bg-white rounded-[2rem] p-8 w-full max-w-4xl relative z-10 max-h-[90vh] overflow-y-auto animate-modal-pop">
-        <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={onClose}></div>
+      
+      {/* Modal Content */}
+      <div className="bg-white rounded-[2rem] p-6 md:p-8 w-full max-w-5xl relative z-10 max-h-[95vh] overflow-y-auto animate-modal-pop shadow-2xl">
+        <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-gray-100 rounded-full hover:bg-red-500 hover:text-white transition-colors z-50">
           <X size={20} />
         </button>
         
-        <div className="text-center mb-10">
-          <span className="text-green-600 font-bold uppercase tracking-widest text-sm">Quy trình khép kín</span>
-          <h3 className="text-3xl font-black text-gray-900 mt-2">Từ Nông Trại Đến Bàn Ăn</h3>
+        <div className="text-center mb-6">
+          <span className="text-green-600 font-bold uppercase tracking-widest text-sm">Trải nghiệm thực tế</span>
+          <h3 className="text-3xl font-black text-gray-900 mt-2">Quy Trình Sản Xuất TH Food</h3>
         </div>
 
-        <div className="grid md:grid-cols-5 gap-4 relative">
+        {/* --- KHU VỰC VIDEO --- */}
+        <div className="w-full aspect-video bg-black rounded-2xl overflow-hidden mb-10 shadow-lg border border-gray-200 relative group">
+            {/* CÁCH 1: Dùng Link YouTube (Khuyên dùng vì nhẹ web) */}
+            {/* Thay ID video 'kU5FqA7v_w' bằng ID video của bạn */}
+            <iframe 
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/zZtpIIF0QvI" title="Setup 2 Màn Hình | Cấu Hình Trước Khi Đổi Thiết Bị - LowTech.25" 
+                title="Quy trình sản xuất Snack Nấm" 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowFullScreen
+            ></iframe>
+
+            {/* CÁCH 2: Dùng Video tải lên (Bỏ comment đoạn dưới nếu bạn có file video thật) */}
+            <video className="w-full h-full object-cover" controls autoPlay loop muted>
+                <source src="https://youtu.be/zZtpIIF0QvI" type="video/mp4" />
+                Trình duyệt của bạn không hỗ trợ thẻ video.
+            </video> 
+           
+        </div>
+
+        {/* Các bước quy trình (Giữ lại để tóm tắt) */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 relative">
           {/* Connecting Line (Desktop) */}
           <div className="hidden md:block absolute top-8 left-0 w-full h-1 bg-green-100 -z-10"></div>
           
           {steps.map((step, idx) => (
             <div key={idx} className="flex flex-col items-center text-center group">
-              <div className="w-16 h-16 bg-white border-4 border-green-100 rounded-full flex items-center justify-center mb-4 text-green-600 group-hover:bg-green-600 group-hover:text-white group-hover:border-green-600 transition-all duration-300 shadow-lg">
+              <div className="w-14 h-14 md:w-16 md:h-16 bg-white border-4 border-green-100 rounded-full flex items-center justify-center mb-4 text-green-600 group-hover:bg-green-600 group-hover:text-white group-hover:border-green-600 transition-all duration-300 shadow-lg z-10">
                 <step.icon size={24} />
               </div>
-              <h4 className="font-bold text-gray-800 mb-2">{step.title}</h4>
-              <p className="text-xs text-gray-500 leading-relaxed">{step.desc}</p>
-              {idx < steps.length - 1 && (
-                 <ArrowRight className="md:hidden mt-4 text-gray-300 rotate-90" />
-              )}
+              <h4 className="font-bold text-gray-800 mb-1 text-sm md:text-base">{step.title}</h4>
+              <p className="text-xs text-gray-500 leading-relaxed max-w-[120px]">{step.desc}</p>
             </div>
           ))}
         </div>
         
-        <div className="mt-10 p-4 bg-yellow-50 rounded-xl flex items-center justify-center gap-3 text-sm text-yellow-800 border border-yellow-200">
-           <Award size={18} /> Đạt tiêu chuẩn an toàn vệ sinh thực phẩm của Viện Công Nghệ Sinh Học.
+        <div className="mt-8 p-3 bg-yellow-50 rounded-xl flex items-center justify-center gap-3 text-xs md:text-sm text-yellow-800 border border-yellow-200">
+           <Award size={18} className="shrink-0" /> 
+           <span>Cam kết: Quy trình khép kín 1 chiều - Đảm bảo ATVSTP tuyệt đối.</span>
         </div>
       </div>
     </div>
@@ -484,10 +508,10 @@ export default function App() {
                    Sản phẩm kết tinh từ nghiên cứu khoa học và tình yêu nông sản Việt. Mang đến sức khỏe vàng cho gia đình bạn.
                 </p>
                 <div className="flex gap-3 pt-4">
-                   <a href="#" className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-green-600 hover:text-white transition-all text-green-400">
+                   <a href="https://www.facebook.com/thuan.nguyenhoang.161/" className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-green-600 hover:text-white transition-all text-green-400">
                       <Facebook size={20} />
                    </a>
-                   <a href="#" className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all text-green-400">
+                   <a href="https://www.instagram.com/lowtech.25/" className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all text-green-400">
                       <Instagram size={20} />
                    </a>
                    <a href="#" className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-500 hover:text-white transition-all text-green-400">
@@ -524,7 +548,7 @@ export default function App() {
                         <Mail className="text-green-400 shrink-0 mt-1" size={20} />
                         <div>
                             <p className="font-bold text-white text-sm">Email hỗ trợ</p>
-                            <p className="text-green-100/60 text-sm mt-1">contact@thfood.vn</p>
+                            <p className="text-green-100/60 text-sm mt-1">hoangthuandev04@gmail.com</p>
                         </div>
                     </div>
                 </div>
@@ -536,7 +560,7 @@ export default function App() {
              <p>© 2025 TH Food - Design by BeThuanDeThuong</p>
              <div className="flex gap-6">
                 <span className="hover:text-white cursor-pointer">Privacy Policy</span>
-                <span className="hover:text-white cursor-pointer">Hoangthuandev</span>
+                <span className="hover:text-white cursor-pointer">hoangthuandev</span>
              </div>
           </div>
         </div>
