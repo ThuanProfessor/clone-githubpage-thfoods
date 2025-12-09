@@ -1,7 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ShoppingCart, Leaf, Heart, Award, MapPin, Phone, Facebook, Instagram, Zap, Droplet, X, Factory, ArrowRight, CheckCircle, Mail, Globe } from 'lucide-react';
+import { ShoppingCart, Leaf, Heart, Award, MapPin, Phone, Facebook, Instagram, Zap, Droplet, X, Factory, ArrowRight, CheckCircle, Mail, Globe, MessageCircle, Send, Gift, Copy, Sparkles } from 'lucide-react';
 
 // --- Helper Components ---
+
+// 1. Confetti Effect (Pháo hoa giấy)
+const FireConfetti = () => {
+  const colors = ['#22c55e', '#eab308', '#ef4444', '#3b82f6'];
+  const confettiCount = 100;
+  
+  for (let i = 0; i < confettiCount; i++) {
+    const el = document.createElement('div');
+    el.classList.add('confetti-particle');
+    
+    // Random properties
+    const bg = colors[Math.floor(Math.random() * colors.length)];
+    const left = Math.random() * 100 + 'vw';
+    const animDuration = Math.random() * 3 + 2 + 's';
+    const size = Math.random() * 8 + 4 + 'px';
+    
+    el.style.backgroundColor = bg;
+    el.style.left = left;
+    el.style.width = size;
+    el.style.height = size;
+    el.style.animationDuration = animDuration;
+    el.style.position = 'fixed';
+    el.style.top = '-10px';
+    el.style.zIndex = '9999';
+    el.style.borderRadius = '50%';
+    el.style.pointerEvents = 'none';
+    
+    document.body.appendChild(el);
+    
+    setTimeout(() => {
+      el.remove();
+    }, 5000);
+  }
+};
 
 const RevealOnScroll = ({ children, className = "", delay = 0 }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -34,13 +68,69 @@ const RevealOnScroll = ({ children, className = "", delay = 0 }) => {
   );
 };
 
+// 2. 3D Tilt Card Component
+const TiltCard = ({ children, className = "" }) => {
+    const [transform, setTransform] = useState("");
+    const [shadow, setShadow] = useState("");
+
+    const handleMouseMove = (e) => {
+        // Disable tilt on mobile for better scrolling performance
+        if (window.innerWidth < 768) return;
+
+        const card = e.currentTarget;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = ((y - centerY) / centerY) * -10; 
+        const rotateY = ((x - centerX) / centerX) * 10;
+
+        setTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`);
+        setShadow(`0 20px 40px rgba(0,0,0,0.2), 0 0 20px rgba(34, 197, 94, 0.2)`);
+    };
+
+    const handleMouseLeave = () => {
+        setTransform("perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)");
+        setShadow("");
+    };
+
+    return (
+        <div 
+            className={`transition-all duration-200 ease-out transform-gpu will-change-transform ${className}`}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{ transform, boxShadow: shadow }}
+        >
+            {children}
+        </div>
+    );
+};
+
+// --- UPDATED PARALLAX IMAGE WITH SLIDESHOW ANIMATION ---
 const ParallaxImage = () => {
   const [offset, setOffset] = useState(0);
+  const [currentImgIdx, setCurrentImgIdx] = useState(0);
   
+  const images = [
+      "https://res.cloudinary.com/dg5ts9slf/image/upload/v1765197715/Gemini_Generated_Image_jq6u86jq6u86jq6u_copy_unxjyg.png",
+      "https://res.cloudinary.com/dg5ts9slf/image/upload/v1765200640/nam-hong-ngoc_atrdhn.jpg"
+  ];
+
   useEffect(() => {
     const handleScroll = () => setOffset(window.scrollY * 0.1);
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    // Auto change image every 3 seconds
+    const interval = setInterval(() => {
+        setCurrentImgIdx(prev => (prev + 1) % images.length);
+    }, 4000);
+
+    return () => {
+        window.removeEventListener('scroll', handleScroll);
+        clearInterval(interval);
+    };
   }, []);
 
   return (
@@ -49,13 +139,22 @@ const ParallaxImage = () => {
       style={{ transform: `translateY(${offset}px)` }}
     >
       <div className="w-full h-full bg-white/20 backdrop-blur-md rounded-full shadow-[0_30px_60px_rgba(0,0,0,0.15)] p-6 border border-white/40 flex items-center justify-center animate-float">
-        <div className="w-full h-full rounded-full bg-gradient-to-br from-orange-100 to-yellow-50 overflow-hidden relative group cursor-pointer shadow-inner">
-           {/* New Product Image */}
-           <img 
-             src="https://res.cloudinary.com/dg5ts9slf/image/upload/v1765197715/Gemini_Generated_Image_jq6u86jq6u86jq6u_copy_unxjyg.png" 
-             alt="Snack Nấm Rang Giòn TH Food" 
-             className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
-           />
+        <div className="w-full h-full rounded-full bg-gradient-to-br from-orange-100 to-yellow-50 overflow-hidden relative group cursor-pointer shadow-inner isolate">
+           
+           {/* Image Slideshow Logic */}
+           {images.map((img, index) => (
+               <img 
+                 key={index}
+                 src={img} 
+                 alt={`Snack Nấm ${index + 1}`} 
+                 className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out will-change-transform transform ${
+                     index === currentImgIdx 
+                        ? 'opacity-100 scale-100 blur-0' 
+                        : 'opacity-0 scale-110 blur-sm'
+                 }`}
+               />
+           ))}
+
            <div className="absolute top-0 right-0 p-4 bg-yellow-400 text-yellow-900 font-black rounded-bl-3xl shadow-lg z-20">
              NEW
            </div>
@@ -74,28 +173,14 @@ const ParallaxImage = () => {
   );
 };
 
-const BentoCard = ({ title, value, icon: Icon, color, subtext, delay }) => (
-  <RevealOnScroll delay={delay} className={`bg-white rounded-3xl p-6 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group overflow-hidden relative`}>
-    <div className={`absolute top-0 right-0 w-24 h-24 rounded-full -mr-6 -mt-6 opacity-20 ${color} transition-transform group-hover:scale-150 duration-500`}></div>
-    <div className={`w-12 h-12 rounded-xl ${color} bg-opacity-20 flex items-center justify-center mb-4 text-gray-800`}>
-       <Icon size={24} className="opacity-80" />
-    </div>
-    <h3 className="text-gray-500 text-sm font-semibold uppercase tracking-wider mb-1">{title}</h3>
-    <p className="text-3xl font-black text-gray-800 mb-2">{value}</p>
-    <p className="text-xs text-gray-400">{subtext}</p>
-  </RevealOnScroll>
-);
-
-// --- New Feature: Falling Leaves (Top Left to Bottom Right) ---
+// --- New Feature: Falling Leaves ---
 const FallingLeaves = () => {
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
       {[...Array(12)].map((_, i) => {
-        // Randomize starting position (clustered towards top-left)
-        // left: 0% to 50%
         const left = Math.random() * 50; 
         const delay = Math.random() * 8;
-        const duration = 10 + Math.random() * 10; // 10s - 20s
+        const duration = 10 + Math.random() * 10;
         const size = 15 + Math.random() * 20;
         
         return (
@@ -118,7 +203,6 @@ const FallingLeaves = () => {
 };
 
 // --- Production Process Modal ---
-// --- Production Process Modal (Updated with Video) ---
 const ProductionModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
@@ -148,28 +232,18 @@ const ProductionModal = ({ isOpen, onClose }) => {
 
         {/* --- KHU VỰC VIDEO --- */}
         <div className="w-full aspect-video bg-black rounded-2xl overflow-hidden mb-10 shadow-lg border border-gray-200 relative group">
-            {/* CÁCH 1: Dùng Link YouTube (Khuyên dùng vì nhẹ web) */}
-            {/* Thay ID video 'kU5FqA7v_w' bằng ID video của bạn */}
             <iframe 
                 className="w-full h-full"
-                src="https://www.youtube.com/embed/zZtpIIF0QvI" title="Setup 2 Màn Hình | Cấu Hình Trước Khi Đổi Thiết Bị - LowTech.25" 
+                src="https://www.youtube.com/embed/zZtpIIF0QvI" 
                 title="Quy trình sản xuất Snack Nấm" 
                 frameBorder="0" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                 allowFullScreen
             ></iframe>
-
-            {/* CÁCH 2: Dùng Video tải lên (Bỏ comment đoạn dưới nếu bạn có file video thật) */}
-            <video className="w-full h-full object-cover" controls autoPlay loop muted>
-                <source src="https://youtu.be/zZtpIIF0QvI" type="video/mp4" />
-                Trình duyệt của bạn không hỗ trợ thẻ video.
-            </video> 
-           
         </div>
 
-        {/* Các bước quy trình (Giữ lại để tóm tắt) */}
+        {/* Các bước quy trình */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 relative">
-          {/* Connecting Line (Desktop) */}
           <div className="hidden md:block absolute top-8 left-0 w-full h-1 bg-green-100 -z-10"></div>
           
           {steps.map((step, idx) => (
@@ -192,11 +266,96 @@ const ProductionModal = ({ isOpen, onClose }) => {
   );
 };
 
+// --- Voucher Modal ---
+const VoucherModal = ({ isOpen, onClose }) => {
+    const [copied, setCopied] = useState(false);
+    const code = "THFOOD20";
+
+    const copyCode = () => {
+        navigator.clipboard.writeText(code);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
+            <div className="bg-gradient-to-br from-white to-green-50 rounded-[2rem] p-8 w-full max-w-md relative z-10 animate-modal-pop shadow-2xl border-4 border-white">
+                <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                    <X size={24} />
+                </button>
+
+                <div className="text-center">
+                    <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                        <Gift size={40} className="text-yellow-600" />
+                    </div>
+                    <h3 className="text-2xl font-black text-gray-900 mb-2">Chúc Mừng! 🎉</h3>
+                    <p className="text-gray-600 mb-6">Bạn đã nhận được mã giảm giá độc quyền cho lần đặt hàng đầu tiên.</p>
+                    
+                    <div className="bg-white border-2 border-dashed border-green-300 rounded-xl p-4 mb-6 flex items-center justify-between group cursor-pointer hover:border-green-500 transition-colors" onClick={copyCode}>
+                        <div className="text-left">
+                            <span className="text-xs text-gray-400 uppercase font-bold tracking-wider">Mã Giảm Giá</span>
+                            <p className="text-2xl font-black text-green-600 tracking-widest">{code}</p>
+                        </div>
+                        <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-600 group-hover:bg-green-100 group-hover:text-green-600 transition-colors">
+                            {copied ? <CheckCircle size={20} /> : <Copy size={20} />}
+                        </div>
+                    </div>
+
+                    <div className="space-y-3">
+                        <a 
+                            href={`https://zalo.me/0964537055?text=${encodeURIComponent("Chào TH Food, mình muốn dùng mã " + code + " để đặt hàng snack nấm!")}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block w-full bg-[#0068FF] hover:bg-[#0054cc] text-white py-3.5 rounded-xl font-bold shadow-lg shadow-blue-200 transition-transform active:scale-95 flex items-center justify-center gap-2"
+                        >
+                            <MessageCircle size={20} /> Dùng mã qua Zalo
+                        </a>
+                        <button onClick={onClose} className="block w-full bg-transparent text-gray-400 hover:text-gray-600 py-2 text-sm font-semibold">
+                            Để sau
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+// --- NutriBar ---
+const NutriBar = ({ label, value, max, color, icon: Icon, subtext }) => {
+    const percent = Math.min((parseFloat(value) / max) * 100, 100);
+    return (
+        <div className="mb-5 group">
+            <div className="flex justify-between items-end mb-2">
+                <div className="flex items-center gap-2 text-gray-700 font-bold">
+                    <div className={`p-1.5 rounded-lg ${color.bg} ${color.text}`}>
+                        <Icon size={16} />
+                    </div>
+                    <span>{label}</span>
+                </div>
+                <div className="text-right">
+                    <span className="text-lg font-black text-gray-900">{value}</span>
+                    <span className="text-xs text-gray-400 block font-normal">{subtext}</span>
+                </div>
+            </div>
+            <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
+                <div 
+                    className={`h-full ${color.bar} rounded-full transition-all duration-1000 ease-out group-hover:scale-x-105 origin-left`} 
+                    style={{ width: `${percent}%` }}
+                ></div>
+            </div>
+        </div>
+    )
+}
+
 // --- Main App ---
 
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
   const [showProcess, setShowProcess] = useState(false);
+  const [showVoucher, setShowVoucher] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -213,6 +372,13 @@ export default function App() {
       const offsetPosition = elementPosition + window.scrollY - headerOffset;
       window.scrollTo({ top: offsetPosition, behavior: "smooth" });
     }
+  };
+
+  const handleTryNow = () => {
+    FireConfetti(); 
+    setTimeout(() => {
+        setShowVoucher(true);
+    }, 500);
   };
 
   const navItems = [
@@ -260,30 +426,33 @@ export default function App() {
       <style>{`
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
         @keyframes float-delayed { 0% { transform: translateY(0px); } 50% { transform: translateY(15px); } 100% { transform: translateY(0px); } }
-        
-        /* Revised Falling Leaf Animation */
         @keyframes falling-leaf { 
             0% { transform: translate(0, 0) rotate(0deg); opacity: 0; } 
             10% { opacity: 0.8; }
             90% { opacity: 0.8; }
             100% { transform: translate(60vw, 100vh) rotate(360deg); opacity: 0; } 
         }
-
+        @keyframes confetti-fall {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
         @keyframes modal-pop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .animate-float { animation: float 6s ease-in-out infinite; }
         .animate-float-delayed { animation: float-delayed 5s ease-in-out infinite; }
         .animate-falling-leaf { animation: falling-leaf linear infinite; }
         .animate-modal-pop { animation: modal-pop 0.3s ease-out forwards; }
+        .confetti-particle { position: fixed; animation: confetti-fall linear forwards; }
         .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.3); }
-        .glass-footer { background: rgba(22, 50, 22, 0.95); backdrop-filter: blur(10px); }
+        .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.5); }
         html { scroll-behavior: smooth; }
       `}</style>
 
       {/* --- Falling Leaves Effect --- */}
       <FallingLeaves />
       
-      {/* --- Production Modal --- */}
+      {/* --- Modals --- */}
       <ProductionModal isOpen={showProcess} onClose={() => setShowProcess(false)} />
+      <VoucherModal isOpen={showVoucher} onClose={() => setShowVoucher(false)} />
 
       {/* --- Navbar --- */}
       <nav className={`fixed w-full z-50 transition-all duration-500 ${scrolled ? 'glass-nav py-4 shadow-sm' : 'bg-transparent py-6'}`}>
@@ -333,7 +502,6 @@ export default function App() {
                 <Award size={16} className="text-yellow-500" /> Công nghệ rang không dầu
               </div>
               <h1 className="text-6xl xl:text-8xl font-black text-gray-900 leading-[0.9] tracking-tight">
-                {/* --- CHỈNH SỬA TẠI ĐÂY: Thêm nền màu cho chữ SNACK --- */}
                 <span className="block w-fit bg-yellow-400 text-yellow-900 px-4 py-1 rounded-tr-2xl rounded-bl-2xl text-2xl xl:text-3xl font-extrabold mb-4 tracking-widest shadow-lg transform -rotate-1">
                     SNACK
                 </span>
@@ -349,13 +517,15 @@ export default function App() {
             </RevealOnScroll>
 
             <RevealOnScroll delay={400} className="flex flex-wrap gap-4">
+               {/* UPGRADED TRY NOW BUTTON */}
                <button 
-                 onClick={(e) => scrollToSection(e, 'lien-he')}
-                 className="bg-green-600 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-green-700 shadow-xl shadow-green-600/30 hover:-translate-y-1 transition-all flex items-center gap-2"
+                 onClick={handleTryNow}
+                 className="relative group bg-green-600 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-green-700 shadow-xl shadow-green-600/30 hover:-translate-y-1 transition-all flex items-center gap-2 overflow-hidden"
                >
-                 Thử Ngay Hôm Nay
+                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                 <Sparkles size={20} className="animate-pulse" /> Săn Deal Dùng Thử
                </button>
-               {/* NEW Button for Production Process */}
+               
                <button 
                  onClick={() => setShowProcess(true)}
                  className="bg-white text-gray-700 border-2 border-gray-200 px-8 py-4 rounded-2xl font-bold text-lg hover:border-green-600 hover:text-green-600 hover:-translate-y-1 transition-all flex items-center gap-2"
@@ -388,41 +558,114 @@ export default function App() {
         </div>
       </header>
 
-      {/* --- Bento Grid Features --- */}
-      <section id="dinh-duong" className="py-24 container mx-auto px-6">
+      {/* --- REDESIGNED NUTRITION SECTION --- */}
+      <section id="dinh-duong" className="py-24 container mx-auto px-6 relative">
+        <div className="absolute top-1/2 left-0 w-full h-full bg-green-50/50 -skew-y-3 -z-10"></div>
+        
         <RevealOnScroll className="text-center mb-16">
-           <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">Dinh Dưỡng <span className="text-green-600">Vượt Trội</span></h2>
-           <p className="text-gray-500">Phân tích trên 100g sản phẩm</p>
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">Chỉ Số <span className="text-green-600">Vàng</span></h2>
+            <p className="text-gray-500 text-lg">Phân tích dinh dưỡng chi tiết trên 100g sản phẩm</p>
         </RevealOnScroll>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <RevealOnScroll className="lg:col-span-2 lg:row-span-2 bg-gradient-to-br from-green-600 to-green-800 rounded-[2.5rem] p-10 text-white relative overflow-hidden flex flex-col justify-between shadow-2xl">
-             <div className="relative z-10">
-                <div className="bg-white/20 backdrop-blur-md w-fit px-4 py-2 rounded-full text-sm font-bold mb-6 border border-white/20">
-                   ★ Best Seller
-                </div>
-                <h3 className="text-4xl font-bold mb-4">Năng Lượng Sạch</h3>
-                <p className="text-green-100 text-lg opacity-90 max-w-sm">
-                   Cung cấp 326 Kcal năng lượng cần thiết cho ngày dài năng động mà không gây nặng bụng.
-                </p>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+             {/* Left Column: Main Energy Card WITH TILT */}
+             <div className="lg:col-span-5">
+                {/* --- FIX: Thêm class rounded-[2.5rem] vào TiltCard --- */}
+                <TiltCard className="h-full rounded-[2.5rem]">
+                    <div className="relative bg-gradient-to-br from-green-600 to-green-800 rounded-[2.5rem] p-8 md:p-12 text-white shadow-2xl overflow-hidden group h-full">
+                        <div className="absolute top-0 right-0 p-32 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-white/20 transition-all duration-700"></div>
+                        <div className="relative z-10">
+                            <div className="flex items-center gap-2 mb-6">
+                                <span className="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Health Focus</span>
+                            </div>
+                            <h3 className="text-4xl md:text-5xl font-bold mb-2">Năng Lượng</h3>
+                            <div className="flex items-baseline gap-2 mb-6">
+                                <span className="text-7xl md:text-8xl font-black tracking-tighter">326</span>
+                                <span className="text-2xl font-medium opacity-80">kcal</span>
+                            </div>
+                            <p className="text-green-100 text-lg leading-relaxed border-t border-white/20 pt-6">
+                                Nguồn năng lượng sạch, bền bỉ cho cơ thể. Không gây cảm giác nặng bụng hay tích mỡ thừa.
+                            </p>
+                            <div className="mt-8 flex gap-3">
+                                <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl text-sm border border-white/20">
+                                    💪 Vận động
+                                </div>
+                                <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl text-sm border border-white/20">
+                                    🧠 Trí não
+                                </div>
+                            </div>
+                        </div>
+                        <Zap size={250} className="absolute -bottom-10 -right-10 text-white opacity-10 rotate-12 group-hover:rotate-0 transition-transform duration-700" />
+                    </div>
+                </TiltCard>
              </div>
-             <div className="relative z-10 mt-8">
-                <span className="text-7xl font-black tracking-tighter">326</span>
-                <span className="text-2xl font-medium ml-2">kcal</span>
-             </div>
-             <Zap size={200} className="absolute -bottom-10 -right-10 text-white opacity-10 rotate-12" />
-          </RevealOnScroll>
 
-          <BentoCard title="Protein Thực Vật" value="8g" subtext="Tương đương 1 quả trứng lớn" icon={Heart} color="bg-red-500" delay={100} />
-          <BentoCard title="Chất Béo (Lipid)" value="1.4g" subtext="Cực thấp, tốt cho tim mạch" icon={Droplet} color="bg-blue-500" delay={200} />
-          <BentoCard title="Tinh Bột (Glucid)" value="70g" subtext="Nguồn năng lượng bền bỉ" icon={Leaf} color="bg-yellow-500" delay={300} />
-          
-          <RevealOnScroll delay={400} className="bg-white rounded-3xl p-6 shadow-xl border border-gray-100 flex flex-col justify-center items-center text-center group cursor-pointer hover:bg-gray-50 transition-colors">
-             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 group-hover:bg-green-100 transition-colors">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=THFood" alt="QR" className="w-10 h-10 opacity-70 mix-blend-multiply" />
+             {/* Right Column: Detailed Stats */}
+             <div className="lg:col-span-7 space-y-6">
+                <RevealOnScroll delay={200} className="bg-white rounded-[2rem] p-8 shadow-xl border border-gray-100 relative overflow-hidden">
+                    {/* <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-bl-[100px] -z-0"></div> */}
+                    <div class="absolute top-0 right-0 w-24 h-24 rounded-full -mr-6 -mt-6 opacity-20 bg-red-500 transition-transform group-hover:scale-150 duration-500"></div>
+                    <h4 className="text-2xl font-bold text-gray-800 mb-8 relative z-10">Chi tiết thành phần</h4>
+                    
+                    {/* Protein Bar */}
+                    <NutriBar 
+                        label="Protein (Đạm)" 
+                        value="8g" 
+                        max={15}
+                        subtext="Giúp xây dựng cơ bắp"
+                        icon={Heart} 
+                        color={{ bg: "bg-red-100", text: "text-red-600", bar: "bg-gradient-to-r from-red-400 to-red-600" }} 
+                    />
+
+                    {/* Lipid Bar */}
+                    <NutriBar 
+                        label="Lipid (Chất béo)" 
+                        value="1.4g" 
+                        max={10} 
+                        subtext="Cực thấp - Tốt cho tim"
+                        icon={Droplet} 
+                        color={{ bg: "bg-blue-100", text: "text-blue-600", bar: "bg-gradient-to-r from-blue-400 to-blue-600" }} 
+                    />
+
+                    {/* Carb Bar */}
+                    <NutriBar 
+                        label="Glucid (Tinh bột)" 
+                        value="70g" 
+                        max={100} 
+                        subtext="Năng lượng thiết yếu"
+                        icon={Leaf} 
+                        color={{ bg: "bg-yellow-100", text: "text-yellow-600", bar: "bg-gradient-to-r from-yellow-400 to-yellow-600" }} 
+                    />
+                </RevealOnScroll>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* --- FIX: Thêm class rounded-3xl vào TiltCard --- */}
+                    <TiltCard className="rounded-3xl">
+                        <div className="glass-panel p-6 rounded-3xl flex items-center gap-4 hover:shadow-lg transition-shadow h-full">
+                            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                                <CheckCircle size={24} />
+                            </div>
+                            <div>
+                                <p className="font-bold text-gray-800">Không Cholesterol</p>
+                                <p className="text-xs text-gray-500">An toàn cho tim mạch</p>
+                            </div>
+                        </div>
+                    </TiltCard>
+                    
+                    {/* --- FIX: Thêm class rounded-3xl vào TiltCard --- */}
+                    <TiltCard className="rounded-3xl">
+                        <div className="glass-panel p-6 rounded-3xl flex items-center gap-4 hover:shadow-lg transition-shadow h-full">
+                            <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
+                                <Leaf size={24} />
+                            </div>
+                            <div>
+                                <p className="font-bold text-gray-800">Giàu chất xơ</p>
+                                <p className="text-xs text-gray-500">Tốt cho tiêu hóa</p>
+                            </div>
+                        </div>
+                    </TiltCard>
+                </div>
              </div>
-             <p className="font-bold text-gray-800 text-sm">Quét mã truy xuất nguồn gốc</p>
-          </RevealOnScroll>
         </div>
       </section>
 
@@ -487,10 +730,35 @@ export default function App() {
                 <h2 className="text-4xl md:text-5xl font-black text-white mb-4">Bạn đã sẵn sàng <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-yellow-400">thử ngay chưa?</span></h2>
                 <p className="text-green-100/60 max-w-lg text-lg">Liên hệ với chúng tôi để nhận báo giá sỉ và lẻ tốt nhất thị trường.</p>
             </div>
-            <div className="mt-8 md:mt-0 flex gap-4">
-                <button className="bg-white text-green-900 hover:bg-green-400 transition-colors px-8 py-4 rounded-2xl font-bold text-lg shadow-lg flex items-center gap-2">
-                    <Phone size={20} /> 0964 537 055
-                </button>
+            
+            {/* UPDATED CONTACT BUTTONS FOR MOBILE */}
+            <div className="mt-8 md:mt-0 flex flex-col items-center md:items-end gap-3 w-full md:w-auto">
+                <a href="tel:0964537055" className="bg-white text-green-900 hover:bg-green-400 transition-colors px-8 py-4 rounded-2xl font-bold text-lg shadow-lg flex items-center justify-center gap-2 w-full md:w-auto animate-pulse">
+                    <Phone size={24} className="fill-green-900 text-green-900" /> 
+                    <span>0964 537 055</span>
+                </a>
+                
+                <div className="flex gap-3 w-full md:w-auto">
+                    {/* Zalo Button */}
+                    <a 
+                        href="https://zalo.me/0964537055" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex-1 md:flex-none bg-[#0068FF] hover:bg-[#0054cc] text-white px-5 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg border border-white/10"
+                    >
+                        <MessageCircle size={20} /> Zalo
+                    </a>
+                    
+                    {/* Messenger Button */}
+                    <a 
+                        href="https://www.facebook.com/messages/t/thuan.nguyenhoang.161" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex-1 md:flex-none bg-[#0068FF] hover:bg-[#0054cc] text-white px-5 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg border border-white/10"
+                    >
+                        <Send size={20} /> Messenger
+                    </a>
+                </div>
             </div>
           </div>
 
@@ -559,7 +827,7 @@ export default function App() {
           <div className="border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-green-100/40">
              <p>© 2025 TH Food - Design by BeThuanDeThuong</p>
              <div className="flex gap-6">
-                <span className="hover:text-white cursor-pointer">Privacy Policy</span>
+                <span className="hover:text-white cursor-pointer">Industrial University</span>
                 <span className="hover:text-white cursor-pointer">hoangthuandev</span>
              </div>
           </div>
