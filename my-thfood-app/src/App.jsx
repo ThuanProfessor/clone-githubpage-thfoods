@@ -827,8 +827,8 @@ export default function App() {
           <div className="border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-green-100/40">
              <p>© 2025 TH Food - Design by BeThuanDeThuong</p>
              <div className="flex gap-6">
-                <span className="hover:text-white cursor-pointer">Industrial University</span>
-                <span className="hover:text-white cursor-pointer">hoangthuandev</span>
+                <a href='https://iuh.edu.vn/' target='_blank' className="hover:text-white cursor-pointer">Industrial University</a>
+                <a href='https://github.com/ThuanProfessor' target='_blank' className="hover:text-white cursor-pointer">hoangthuandev</a>
              </div>
           </div>
         </div>
