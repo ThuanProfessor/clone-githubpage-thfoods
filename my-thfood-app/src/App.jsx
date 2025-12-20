@@ -239,7 +239,7 @@ const ProductionModal = ({ isOpen, onClose }) => {
             
             {/* Box Image with Floating Effect */}
             <img 
-                src="https://res.cloudinary.com/dg5ts9slf/image/upload/v1766206104/f00cf3fb-ab45-4dfc-ba7e-076e7760287d_qkzek7.png" 
+                src="https://res.cloudinary.com/dg5ts9slf/image/upload/v1766207425/4026ebe6-65d0-46ff-9125-7b58706f10c2_r0fqt4.png" 
                 alt="Hộp Snack Nấm TH Food" 
                 className="h-[85%] md:h-[95%] w-auto object-contain animate-float drop-shadow-2xl z-10 transition-transform duration-700 hover:scale-105 hover:rotate-2"
             />
@@ -554,19 +554,20 @@ export default function App() {
 
             <RevealOnScroll delay={400} className="flex flex-wrap gap-4">
                {/* UPGRADED TRY NOW BUTTON */}
-               <button 
+               {/* <button 
                  onClick={handleTryNow}
                  className="relative group bg-green-600 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-green-700 shadow-xl shadow-green-600/30 hover:-translate-y-1 transition-all flex items-center gap-2 overflow-hidden"
                >
                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                  <Sparkles size={20} className="animate-pulse" /> Săn Deal Dùng Thử
-               </button>
+               </button> */}
                
                <button 
                  onClick={() => setShowProcess(true)}
-                 className="bg-white text-gray-700 border-2 border-gray-200 px-8 py-4 rounded-2xl font-bold text-lg hover:border-green-600 hover:text-green-600 hover:-translate-y-1 transition-all flex items-center gap-2"
+                 className="relative group bg-green-600 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-green-700 shadow-xl shadow-green-600/30 hover:-translate-y-1 transition-all flex items-center gap-2 overflow-hidden"
                >
-                 <Factory size={20} /> Quy Trình SX
+                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                 <Sparkles size={20} className="animate-pulse" /> Quy trình sản xuất
                </button>
             </RevealOnScroll>
 
@@ -616,7 +617,7 @@ export default function App() {
                             </div>
                             <h3 className="text-4xl md:text-5xl font-bold mb-2">Năng Lượng</h3>
                             <div className="flex items-baseline gap-2 mb-6">
-                                <span className="text-7xl md:text-8xl font-black tracking-tighter">326</span>
+                                <span className="text-7xl md:text-8xl font-black tracking-tighter">325</span>
                                 <span className="text-2xl font-medium opacity-80">kcal</span>
                             </div>
                             <p className="text-green-100 text-lg leading-relaxed border-t border-white/20 pt-6">
@@ -656,7 +657,7 @@ export default function App() {
                     {/* Lipid Bar */}
                     <NutriBar 
                         label="Lipid (Chất béo)" 
-                        value="1.4g" 
+                        value="1.27g" 
                         max={10} 
                         subtext="Cực thấp - Tốt cho tim"
                         icon={Droplet} 
@@ -665,7 +666,7 @@ export default function App() {
 
                     {/* Carb Bar */}
                     <NutriBar 
-                        label="Glucid (Tinh bột)" 
+                        label="Carbohydrate (Tinh bột)" 
                         value="70g" 
                         max={100} 
                         subtext="Năng lượng thiết yếu"
