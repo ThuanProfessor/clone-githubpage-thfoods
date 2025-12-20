@@ -140,7 +140,7 @@ const ParallaxImage = () => {
     >
       <div className="w-full h-full bg-white/20 backdrop-blur-md rounded-full shadow-[0_30px_60px_rgba(0,0,0,0.15)] p-6 border border-white/40 flex items-center justify-center animate-float">
         <div className="w-full h-full rounded-full bg-gradient-to-br from-orange-100 to-yellow-50 overflow-hidden relative group cursor-pointer shadow-inner isolate">
-           
+            
            {/* Image Slideshow Logic */}
            {images.map((img, index) => (
                <img 
@@ -207,11 +207,12 @@ const ProductionModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const steps = [
-    { title: "Tuyển Chọn", desc: "Nấm tươi và nguyên liệu được chọn lọc kỹ càng từ nông trại sạch.", icon: Leaf },
-    { title: "Sơ Chế", desc: "Rửa sạch, loại bỏ tạp chất và cắt lát theo tiêu chuẩn.", icon: Droplet },
-    { title: "Phối Trộn", desc: "Trộn đều với tinh bột sắn, đậu xanh và gia vị theo công thức độc quyền.", icon: Heart },
-    { title: "Rang Giòn", desc: "Công nghệ rang nhiệt hiện đại, không dùng dầu chiên.", icon: Zap },
-    { title: "Đóng Gói", desc: "Đóng gói trong môi trường vô trùng để giữ độ giòn lâu nhất.", icon: CheckCircle },
+    { title: "Chuẩn bị nguyên liệu", icon: Leaf },
+    { title: "Ủ - Phối trộn nguyên liệu", icon: Droplet },
+    { title: "Tạo hình - Gia nhiệt sơ bộ", icon: Heart },
+    { title: "Phủ Maltodextrin - Sấy hoàn thiện", icon: Zap },
+    { title: "Rang cát", icon: Heart },
+    { title: "Thành phẩm", icon: CheckCircle }
   ];
 
   return (
@@ -220,7 +221,7 @@ const ProductionModal = ({ isOpen, onClose }) => {
       <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={onClose}></div>
       
       {/* Modal Content */}
-      <div className="bg-white rounded-[2rem] p-6 md:p-8 w-full max-w-5xl relative z-10 max-h-[95vh] overflow-y-auto animate-modal-pop shadow-2xl">
+      <div className="bg-white rounded-[2rem] p-6 md:p-8 w-full max-w-6xl relative z-10 max-h-[95vh] overflow-y-auto animate-modal-pop shadow-2xl">
         <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-gray-100 rounded-full hover:bg-red-500 hover:text-white transition-colors z-50">
           <X size={20} />
         </button>
@@ -230,35 +231,67 @@ const ProductionModal = ({ isOpen, onClose }) => {
           <h3 className="text-3xl font-black text-gray-900 mt-2">Quy Trình Sản Xuất TH Food</h3>
         </div>
 
-        {/* --- KHU VỰC VIDEO --- */}
-        <div className="w-full aspect-video bg-black rounded-2xl overflow-hidden mb-10 shadow-lg border border-gray-200 relative group">
-            <iframe 
-                className="w-full h-full"
-                src="https://www.youtube.com/embed/zZtpIIF0QvI" 
-                title="Quy trình sản xuất Snack Nấm" 
-                frameBorder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowFullScreen
-            ></iframe>
+        {/* --- KHU VỰC ẢNH SẢN PHẨM MỚI --- */}
+        <div className="w-full h-72 md:h-96 bg-gradient-to-b from-green-50 to-white rounded-3xl flex items-center justify-center mb-10 relative overflow-hidden group shadow-inner border border-green-100/50">
+            {/* Background Glow */}
+            <div className="absolute w-[120%] h-[120%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-yellow-200/30 via-green-100/10 to-transparent animate-pulse-slow"></div>
+            
+            {/* Box Image with Floating Effect */}
+            <img 
+                src="https://res.cloudinary.com/dg5ts9slf/image/upload/v1766206104/f00cf3fb-ab45-4dfc-ba7e-076e7760287d_qkzek7.png" 
+                alt="Hộp Snack Nấm TH Food" 
+                className="h-[85%] md:h-[95%] w-auto object-contain animate-float drop-shadow-2xl z-10 transition-transform duration-700 hover:scale-105 hover:rotate-2"
+            />
+
+            {/* Floating Badges */}
+            <div className="absolute top-6 right-6 bg-yellow-400 text-yellow-900 px-4 py-2 rounded-full font-bold shadow-lg animate-bounce z-20">
+                New Packaging
+            </div>
+            
+            <div className="absolute bottom-6 left-6 bg-white/80 backdrop-blur-sm border border-white text-green-700 px-4 py-2 rounded-xl text-sm font-semibold shadow-sm z-20 flex items-center gap-2">
+                <Leaf size={16} /> 100% Tự nhiên
+            </div>
         </div>
 
-        {/* Các bước quy trình */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 relative">
-          <div className="hidden md:block absolute top-8 left-0 w-full h-1 bg-green-100 -z-10"></div>
-          
-          {steps.map((step, idx) => (
-            <div key={idx} className="flex flex-col items-center text-center group">
-              <div className="w-14 h-14 md:w-16 md:h-16 bg-white border-4 border-green-100 rounded-full flex items-center justify-center mb-4 text-green-600 group-hover:bg-green-600 group-hover:text-white group-hover:border-green-600 transition-all duration-300 shadow-lg z-10">
-                <step.icon size={24} />
-              </div>
-              <h4 className="font-bold text-gray-800 mb-1 text-sm md:text-base">{step.title}</h4>
-              <p className="text-xs text-gray-500 leading-relaxed max-w-[120px]">{step.desc}</p>
+        {/* Các bước quy trình - Responsive Design Update */}
+        <div className="relative mt-8">
+            {/* Connecting Lines */}
+            {/* Desktop Horizontal Line */}
+            <div className="hidden lg:block absolute top-10 left-0 w-full h-1 bg-green-100 -z-10 rounded-full"></div>
+            {/* Mobile Vertical Line */}
+            <div className="lg:hidden absolute left-[2.35rem] top-4 bottom-4 w-1 bg-green-100 -z-10 rounded-full"></div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 lg:gap-4">
+                {steps.map((step, idx) => (
+                    <div key={idx} className="group flex lg:flex-col items-center gap-5 lg:gap-4 relative">
+                        
+                        {/* Icon Circle */}
+                        <div className="relative shrink-0">
+                            <div className="w-20 h-20 lg:w-20 lg:h-20 bg-white border-4 border-green-50 rounded-full flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white group-hover:border-green-200 group-hover:scale-110 transition-all duration-300 shadow-lg z-10">
+                                <step.icon size={32} />
+                            </div>
+                            {/* Step Number Badge */}
+                            <div className="absolute -top-1 -right-1 w-7 h-7 bg-yellow-400 rounded-full flex items-center justify-center text-xs font-black text-yellow-900 border-2 border-white shadow-sm z-20">
+                                {idx + 1}
+                            </div>
+                        </div>
+
+                        {/* Content Card (Mobile Optimized) */}
+                        <div className="flex-1 lg:text-center w-full bg-white lg:bg-transparent p-5 lg:p-0 rounded-2xl border border-gray-100 lg:border-none shadow-sm lg:shadow-none hover:shadow-md lg:hover:shadow-none transition-all duration-300 transform group-hover:-translate-y-1 lg:group-hover:translate-y-0">
+                            <h4 className="font-bold text-gray-800 text-lg lg:text-sm xl:text-base leading-tight group-hover:text-green-700 transition-colors">
+                                {step.title}
+                            </h4>
+                            <p className="text-xs text-gray-400 mt-1 lg:hidden">
+                                Bước {idx + 1} trong quy trình
+                            </p>
+                        </div>
+                    </div>
+                ))}
             </div>
-          ))}
         </div>
         
-        <div className="mt-8 p-3 bg-yellow-50 rounded-xl flex items-center justify-center gap-3 text-xs md:text-sm text-yellow-800 border border-yellow-200">
-           <Award size={18} className="shrink-0" /> 
+        <div className="mt-12 p-4 bg-yellow-50 rounded-xl flex items-center justify-center gap-3 text-sm font-medium text-yellow-800 border border-yellow-200 shadow-sm">
+           <Award size={20} className="shrink-0 text-yellow-600" /> 
            <span>Cam kết: Quy trình khép kín 1 chiều - Đảm bảo ATVSTP tuyệt đối.</span>
         </div>
       </div>
@@ -437,10 +470,12 @@ export default function App() {
             100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
         @keyframes modal-pop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes pulse-slow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.5; } }
         .animate-float { animation: float 6s ease-in-out infinite; }
         .animate-float-delayed { animation: float-delayed 5s ease-in-out infinite; }
         .animate-falling-leaf { animation: falling-leaf linear infinite; }
         .animate-modal-pop { animation: modal-pop 0.3s ease-out forwards; }
+        .animate-pulse-slow { animation: pulse-slow 3s infinite; }
         .confetti-particle { position: fixed; animation: confetti-fall linear forwards; }
         .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.3); }
         .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.5); }
@@ -604,7 +639,7 @@ export default function App() {
              <div className="lg:col-span-7 space-y-6">
                 <RevealOnScroll delay={200} className="bg-white rounded-[2rem] p-8 shadow-xl border border-gray-100 relative overflow-hidden">
                     {/* <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-bl-[100px] -z-0"></div> */}
-                    <div class="absolute top-0 right-0 w-24 h-24 rounded-full -mr-6 -mt-6 opacity-20 bg-red-500 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div className="absolute top-0 right-0 w-24 h-24 rounded-full -mr-6 -mt-6 opacity-20 bg-red-500 transition-transform group-hover:scale-150 duration-500"></div>
                     <h4 className="text-2xl font-bold text-gray-800 mb-8 relative z-10">Chi tiết thành phần</h4>
                     
                     {/* Protein Bar */}
