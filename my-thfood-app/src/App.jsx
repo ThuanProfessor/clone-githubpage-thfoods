@@ -657,7 +657,7 @@ export default function App() {
                     {/* Lipid Bar */}
                     <NutriBar 
                         label="Lipid (Chất béo)" 
-                        value="1.27g" 
+                        value="1,27g" 
                         max={10} 
                         subtext="Cực thấp - Tốt cho tim"
                         icon={Droplet} 
