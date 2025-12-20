@@ -246,7 +246,7 @@ const ProductionModal = ({ isOpen, onClose }) => {
 
             {/* Floating Badges */}
             <div className="absolute top-6 right-6 bg-yellow-400 text-yellow-900 px-4 py-2 rounded-full font-bold shadow-lg animate-bounce z-20">
-                New Packaging
+                Sản phẩm mới
             </div>
             
             <div className="absolute bottom-6 left-6 bg-white/80 backdrop-blur-sm border border-white text-green-700 px-4 py-2 rounded-xl text-sm font-semibold shadow-sm z-20 flex items-center gap-2">
