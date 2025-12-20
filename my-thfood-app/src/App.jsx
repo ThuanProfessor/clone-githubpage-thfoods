@@ -646,7 +646,7 @@ export default function App() {
                     
                     {/* Protein Bar */}
                     <NutriBar 
-                        label="Protein (Đạm)" 
+                        label="Protein" 
                         value="8g" 
                         max={15}
                         subtext="Giúp xây dựng cơ bắp"
@@ -656,7 +656,7 @@ export default function App() {
 
                     {/* Lipid Bar */}
                     <NutriBar 
-                        label="Lipid (Chất béo)" 
+                        label="Lipid" 
                         value="1,27g" 
                         max={10} 
                         subtext="Cực thấp - Tốt cho tim"
@@ -666,7 +666,7 @@ export default function App() {
 
                     {/* Carb Bar */}
                     <NutriBar 
-                        label="Carbohydrate (Tinh bột)" 
+                        label="Carbohydrate" 
                         value="70g" 
                         max={100} 
                         subtext="Năng lượng thiết yếu"
