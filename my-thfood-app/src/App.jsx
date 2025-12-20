@@ -210,6 +210,7 @@ const ProductionModal = ({ isOpen, onClose }) => {
     { title: "Chuẩn bị nguyên liệu", icon: Leaf },
     { title: "Ủ - Phối trộn nguyên liệu", icon: Droplet },
     { title: "Tạo hình - Gia nhiệt sơ bộ", icon: Heart },
+    { title: "Sấy - Làm nguội", icon: Heart },
     { title: "Phủ Maltodextrin - Sấy hoàn thiện", icon: Zap },
     { title: "Rang cát", icon: Heart },
     { title: "Thành phẩm", icon: CheckCircle }
